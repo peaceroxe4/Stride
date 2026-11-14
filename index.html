@@ -1,0 +1,396 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#000000">
+<title>Stride: Dunk Trainer</title>
+<link rel="manifest" href="/manifest.webmanifest">
+<link rel="icon" href="/icon.svg" type="image/svg+xml">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+<style>
+:root{--s:#121214;--s2:#1c1c20;--ink:#f5f5f7;--mute:#8e8e99;--o:#ff5e00;--b:#00a8ff;color-scheme:dark;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+html{background:#000;scroll-padding-top:env(safe-area-inset-top,0px)}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+body{margin:0;background:#000;color:var(--ink);font:15px/1.45 Inter,system-ui,-apple-system,"Segoe UI",sans-serif}
+main{max-width:520px;margin:0 auto;padding:16px 16px 120px}
+h1,h2,h3,p{margin:0}
+.m{color:var(--mute)}
+.c{background:var(--s);border-radius:28px;padding:20px;margin-bottom:12px}
+.btn{border:0;border-radius:999px;padding:14px 22px;font:700 15px Inter,system-ui,sans-serif;background:var(--o);color:#000;cursor:pointer}
+.btn:active{transform:scale(.97)}
+.btn.g{background:var(--s2);color:var(--ink)}.btn.b{background:var(--b)}.btn.s{padding:9px 16px;font-size:13px}
+input,select{font:600 15px Inter,system-ui,sans-serif;color:var(--ink);background:var(--s2);border:2px solid transparent;border-radius:18px;padding:13px 16px;width:100%}
+input:focus,select:focus{outline:0;border-color:var(--o)}
+input[type=range]{padding:0;background:none;accent-color:var(--o);height:36px}
+button:focus-visible{outline:3px solid var(--b);outline-offset:2px}
+.hd{display:flex;align-items:center;gap:12px;margin:4px 2px 16px}
+.hd b{font-size:20px;font-weight:900;letter-spacing:.04em;display:block;line-height:1.1}
+.row{display:flex;gap:10px;align-items:center}.row>.f{flex:1}
+.ob{min-height:calc(100vh - 40px);display:flex;flex-direction:column;justify-content:center;gap:16px;text-align:center}
+.ob h1{font-size:32px;font-weight:900;letter-spacing:-.02em;line-height:1.1}
+.dots{display:flex;gap:6px;justify-content:center}.dots i{width:28px;height:6px;border-radius:9px;background:var(--s2)}.dots i.on{background:var(--o)}
+.num{font-size:84px;font-weight:900;letter-spacing:-.04em;line-height:1;font-variant-numeric:tabular-nums}.num small{font-size:22px;color:var(--mute);font-weight:700;margin-left:6px}
+.pm{display:flex;gap:10px;justify-content:center}
+.opt{text-align:left;background:var(--s);border:2px solid transparent;border-radius:24px;padding:18px;color:var(--ink);font:inherit;cursor:pointer;width:100%}
+.opt b{display:block;font-size:18px}.opt.on{border-color:var(--o);background:#1a0f08}
+.sum{display:grid;grid-template-columns:1fr 1fr;gap:10px;text-align:left}
+.sum div{background:var(--s);border-radius:22px;padding:14px}.sum b{display:block;font-size:26px;font-weight:800}
+.ring{position:relative;width:220px;height:220px;margin:6px auto 14px}
+.ring .t{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center}
+.ring .t b{font-size:54px;font-weight:900;letter-spacing:-.03em;line-height:1}
+.chips{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
+.chips div{background:var(--s2);border-radius:20px;padding:12px;text-align:center}.chips b{display:block;font-size:19px;font-weight:800}
+.bars{display:flex;align-items:flex-end;gap:8px;height:110px;margin-top:12px}
+.bars div{flex:1;min-width:30px;height:100%;display:flex;flex-direction:column;justify-content:flex-end;align-items:center;gap:4px;font-size:11px;font-weight:700}
+.bars i{display:block;width:100%;border-radius:12px;background:var(--s2)}.bars .l i{background:var(--o)}
+.pills{display:flex;gap:8px;overflow-x:auto;padding-bottom:8px;scrollbar-width:none}.pills::-webkit-scrollbar{display:none}
+.pill{flex:0 0 auto;border:0;border-radius:999px;padding:9px 16px;font:700 13px Inter,system-ui,sans-serif;background:var(--s2);color:var(--mute);cursor:pointer}
+.pill.on{background:var(--o);color:#000}
+.dr{display:flex;align-items:center;gap:12px;background:var(--s2);border-radius:22px;padding:13px 15px;margin-top:8px;cursor:pointer}
+.dr .x{flex:1;min-width:0}.dr b{display:block;font-size:14px}.dr span{font-size:12px;color:var(--mute);display:block}
+.tag{font-size:10px;font-weight:800;color:var(--b);letter-spacing:.05em}
+.dose{font-size:12px;font-weight:700;background:var(--s);border-radius:99px;padding:6px 11px;white-space:nowrap}
+.done{box-shadow:inset 0 0 0 2px var(--b)}
+nav{position:fixed;left:12px;right:12px;bottom:calc(10px + env(safe-area-inset-bottom,0px));max-width:496px;margin:0 auto;background:rgba(24,24,28,.92);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);border-radius:999px;display:grid;grid-template-columns:repeat(4,1fr);padding:6px;z-index:20}
+nav button{border:0;background:none;color:#777;border-radius:999px;padding:8px 2px;display:flex;flex-direction:column;align-items:center;font:700 10px Inter,system-ui,sans-serif;cursor:pointer}
+nav button.on{color:var(--o);background:#000}nav svg{width:20px;height:20px;margin-bottom:3px}
+.sheet{position:fixed;inset:0;background:rgba(0,0,0,.75);display:none;align-items:flex-end;justify-content:center;z-index:40}
+.sheet.show{display:flex}
+.sheet>div{background:var(--s);width:100%;max-width:520px;border-radius:32px 32px 0 0;padding:22px 20px calc(22px + env(safe-area-inset-bottom,0px))}
+#rest{position:fixed;left:50%;transform:translateX(-50%);bottom:calc(84px + env(safe-area-inset-bottom,0px));background:var(--b);color:#000;border-radius:999px;padding:8px 8px 8px 20px;display:none;align-items:center;gap:12px;font-weight:800;z-index:30}
+#rest.show{display:flex}#rest button{padding:8px 14px}
+#toast{position:fixed;top:calc(12px + env(safe-area-inset-top,0px));left:50%;transform:translateX(-50%);background:#1c1c20;border-radius:999px;padding:11px 20px;font-weight:700;font-size:13px;z-index:60;opacity:0;pointer-events:none;transition:opacity .25s;max-width:92%;text-align:center}
+#toast.show{opacity:1}
+.days{display:grid;grid-template-columns:repeat(7,1fr);gap:6px;margin-bottom:12px}
+.dayb{border:0;border-radius:18px;background:var(--s);color:var(--mute);padding:10px 0;display:flex;flex-direction:column;align-items:center;font:700 12px Inter,system-ui,sans-serif;cursor:pointer}
+.dayb span{font-size:10px;font-weight:600;margin-top:2px}.dayb.on{background:#1a0f08;color:var(--o);box-shadow:inset 0 0 0 2px var(--o)}
+.sh,.sr{display:grid;grid-template-columns:30px 1fr 1fr 52px;gap:8px;align-items:center}
+.sh{font-size:10px;font-weight:800;color:var(--mute);letter-spacing:.06em;margin:12px 0 6px;text-align:center}
+.sr{background:var(--s2);border-radius:20px;padding:6px 8px;margin-bottom:6px}.sr.ok{background:#0b2a20}
+.sr input{text-align:center;padding:9px 6px;background:var(--s);border-radius:14px}
+.sn{width:26px;height:26px;border-radius:50%;background:var(--s);display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:800}
+.ck{border:0;border-radius:14px;height:38px;background:var(--s);color:#555;font-size:18px;font-weight:900;cursor:pointer}.ck.on{background:#12b886;color:#00170f}
+.add{width:100%;border:2px dashed #2a2a30;background:none;color:var(--mute);border-radius:18px;padding:10px;font:700 13px Inter,system-ui,sans-serif;margin-top:4px;cursor:pointer}
+.big{width:100%;border:0;border-radius:999px;background:var(--o);color:#000;padding:16px;font:800 15px Inter,system-ui,sans-serif;cursor:pointer;margin-bottom:12px}
+.dl{display:flex;gap:12px;align-items:flex-start;width:100%;text-align:left;border:0;background:var(--s2);color:var(--ink);border-radius:20px;padding:12px 14px;margin-top:8px;font:inherit;cursor:pointer}
+.dl i{flex:0 0 22px;height:22px;border-radius:7px;background:var(--s);display:flex;align-items:center;justify-content:center;font-style:normal;font-weight:900;color:#00170f}
+.dl.on i{background:#12b886}.dl b{display:block;font-size:14px}.dl span{font-size:12px;color:var(--mute)}
+#fab{position:fixed;right:16px;bottom:calc(84px + env(safe-area-inset-bottom,0px));z-index:25;border:0;border-radius:999px;background:var(--b);color:#000;font:800 13px Inter,system-ui,sans-serif;padding:12px 18px;cursor:pointer}
+.bub{padding:10px 14px;border-radius:20px;max-width:88%;white-space:pre-wrap;font-size:14px}
+.bub.u{align-self:flex-end;background:var(--o);color:#000}.bub.a{align-self:flex-start;background:var(--s2)}
+.hide{display:none!important}
+.fe{display:flex;justify-content:space-between;align-items:center;gap:10px;background:var(--s2);border-radius:20px;padding:11px 15px;margin-top:8px}
+</style>
+</head>
+<body>
+<div id="toast"></div>
+<main id="app"></main>
+<div id="rest"><span id="rt">02:30</span><button class="btn g s" onclick="stopRest()">Skip</button></div>
+
+<div class="sheet" id="modal" onclick="if(event.target===this)closeM()"><div>
+  <span class="tag" id="mc"></span>
+  <h2 id="mn" style="font-size:22px;margin:4px 0"></h2>
+  <p class="m" id="mq" style="margin-bottom:14px"></p>
+  <div class="row" style="margin-bottom:14px">
+    <div class="f"><label class="m" style="font-size:12px">Weight (kg)</label><input id="lw" type="number" inputmode="decimal" value="0"></div>
+    <div class="f"><label class="m" style="font-size:12px">Reps / sec</label><input id="lr" type="number" inputmode="numeric" value="5"></div>
+  </div>
+  <div class="row"><button class="btn f" onclick="logSet(true)">Log set + rest</button><button class="btn g" onclick="logSet(false)">Log only</button></div>
+</div></div>
+
+<div class="sheet" id="pick" onclick="if(event.target===this)$('pick').classList.remove('show')"><div style="max-height:80vh;overflow-y:auto"><h2 style="font-size:20px;margin-bottom:10px">Add exercise</h2><div id="pl"></div></div></div>
+<nav id="nav" class="hide">
+  <button onclick="go('goal')" id="nav-goal"><svg fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6"/></svg>Goal</button>
+  <button onclick="go('plan')" id="nav-plan"><svg fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/></svg>16-Wk Plan</button>
+  <button onclick="go('drills')" id="nav-drills"><svg fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"/></svg>Drills</button>
+  <button onclick="go('logs')" id="nav-logs"><svg fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"/></svg>Logs &amp; JSON</button>
+</nav>
+
+<button id="fab" class="hide" onclick="openAI()">Ask coach</button>
+<div class="sheet" id="ai" onclick="if(event.target===this)closeAI()"><div style="display:flex;flex-direction:column;height:80vh">
+<div class="row" style="margin-bottom:10px"><div class="f"><h2 style="font-size:20px">Stride Coach</h2><p class="m" style="font-size:12px">AI answers. Not medical advice.</p></div><button class="btn g s" onclick="closeAI()" aria-label="Close">✕</button></div>
+<div id="aim" style="flex:1;overflow-y:auto;display:flex;flex-direction:column;gap:8px"></div>
+<div class="pills" id="aic" style="margin:10px 0 0"></div>
+<div class="row" style="margin-top:10px"><input id="aiq" placeholder="Ask about your plan, form, recovery" onkeydown="if(event.key==='Enter')askAI()"><button class="btn" id="aib" onclick="askAI()">Send</button></div>
+</div></div>
+<script>
+const $=id=>document.getElementById(id);
+const KEY='stride_app_v2';
+const LOGO=`<svg width="56" height="56" viewBox="0 0 64 64" fill="none" style="margin:0 auto"><rect width="64" height="64" rx="18" fill="#121214"/><path d="M18 46H34C38.4 46 42 42.4 42 38C42 33.6 38.4 30 34 30H26C21.6 30 18 26.4 18 22C18 17.6 21.6 14 26 14H38" stroke="#00A8FF" stroke-width="6.5" stroke-linecap="round"/><path d="M34 30L48 16M48 16H36M48 16V28" stroke="#FF5E00" stroke-width="6.5" stroke-linecap="round" stroke-linejoin="round"/></svg>`;
+const GOALS=[{n:'Touch the rim',s:'Fingertips on the iron',t:305},{n:'Dunk a tennis ball',s:'Your first real dunk',t:313},{n:'Dunk a basketball',s:'Full two-hand slam',t:320}];
+
+const EX=[
+['p01','Plyo','Depth Jump (45 cm box)','4 × 4','Step off the box, spend as little time on the ground as you can, explode up.'],
+['p02','Plyo','Max Approach Rim Touches','5 × 3','Full run-up, strong arm swing, touch the rim or backboard at your peak.'],
+['p03','Plyo','Ankle Pogo Hops','4 × 15','Straight legs, bounce off your ankles like a pogo stick.'],
+['p04','Plyo','Penultimate Step Bounds','4 × 4/side','Long braking step, then a quick upward jump.'],
+['p05','Plyo','Single-Leg Approach Hop','4 × 4/leg','Three-step jog into a strong one-leg takeoff, drive the other knee up.'],
+['p06','Plyo','Tuck Jumps','3 × 8','Knees to chest at the top, land softly and go again.'],
+['g01','Gym','Bulgarian Split Squat','4 × 5/leg','Torso slightly forward, push through the middle of your foot.'],
+['g02','Gym','Trap Bar Deadlift','4 × 4','Brace hard and pull the bar off the floor fast.'],
+['g03','Gym','Quarter Squat (Heavy)','4 × 4','Stop at the knee angle you jump from and push hard.'],
+['g04','Gym','Hang Power Clean','4 × 3','Extend hips, knees and ankles together, catch in an athletic stance.'],
+['g05','Gym','Standing Calf Raise','4 × 10','Pause at the bottom stretch, rise fast onto your big toe.'],
+['g08','Gym','Romanian Deadlift','3 × 6','Hips back, flat spine, feel the hamstrings load.'],
+['h01','Home','Standing Max Vertical Touch','5 × 4','Mark a wall, swing your arms and reach as high as you can.'],
+['h02','Home','Couch Split Squat','4 × 8/leg','Rear foot on a couch, 3 seconds down, drive up fast.'],
+['h03','Home','Single-Leg Wall Sit','3 × 35s/leg','Knee at 90°, push your heel into the floor.'],
+['h04','Home','Standing Broad Jump','4 × 4','Swing arms back, launch forward, stick the landing.'],
+['h07','Home','Backpack Squat Jump','4 × 6','Load a backpack with 10 to 15 kg, dip fast and jump.'],
+['h09','Home','Single-Leg Calf Raise on Step','4 × 15/leg','Heel drops below the step, pause, rise high.'],
+['t01','Tendon/Core','Spanish Squat Hold','4 × 45s','Strap behind your knees, shins vertical, hold at 75° to toughen the knee tendon.'],
+['t02','Tendon/Core','Copenhagen Plank','3 × 30s/side','Top ankle on a bench. Strengthens the groin for hard braking steps.'],
+['t03','Tendon/Core','Wall Tibialis Raises','4 × 20','Back on the wall, pull your toes toward your shins.'],
+['t04','Tendon/Core','Hanging Leg Raises','4 × 10','No swinging, curl your pelvis up.'],
+['t06','Tendon/Core','Bent-Knee Calf Hold','4 × 45s','Hold your heel just off the floor to strengthen the Achilles.'],
+['t08','Tendon/Core','Pallof Press Hold','3 × 25s/side','Resist the twist with a band, stay square.']
+].map(a=>({id:a[0],cat:a[1],name:a[2],sets:a[3],cue:a[4]}));
+
+const PH=[
+{t:'Phase 1: Base & Tendon Prep',d:'Build strong single legs and tougher knees and ankles before big jumps.',days:[['Single-leg strength',['t01','h02','g08','h09','t02']],['Home jump basics',['p03','h01','h04','h09','t03']],['Posterior chain',['g02','g05','t06','t04']],['Light plyo & core',['p03','p06','h04','t08']]]},
+{t:'Phase 2: Force & Landing',d:'Heavier lifting and better braking so your last step turns into height.',days:[['Heavy legs',['g03','g01','g05','t01']],['Bounds & hops',['p04','p05','p03','t03']],['Hips & core',['g08','g02','t02','t08']],['Home power',['h07','p06','h01','t04']]]},
+{t:'Phase 3: Power & Approach',d:'Turn strength into speed and start jumping off a full run-up.',days:[['Explosive lifts',['g04','g01','g05','t06']],['Approach & depth jumps',['p01','p02','p05','t02']],['Power strength',['g03','g02','h07','t04']],['Fresh legs & core',['p03','p06','h04','t08']]]},
+{t:'Phase 4: Peak & Test',d:'Fewer heavy sets, fresher legs, full rest, then test your best jump.',days:[['Heavy plus fast',['g03','p01','g04','t01']],['Max approach day',['p02','p05','p04','t03']],['Maintain',['g01','g08','g05','t02']],['Test day',['h01','p02','p03','t06']]]}
+];
+
+let S=ld(),tab='goal',ob={step:0,h:178,v:40,g:2,p:'Both',n:4},phase=1,week=1,cat='All',cur=null,rest=0,rt=null,arm=false;
+function ld(){try{return JSON.parse(localStorage.getItem(KEY))}catch(e){return null}}
+function sv(){try{localStorage.setItem(KEY,JSON.stringify(S))}catch(e){toast('Storage full. Export a backup.')}}
+function toast(m){const t=$('toast');t.textContent=m;t.classList.add('show');clearTimeout(t._t);t._t=setTimeout(()=>t.classList.remove('show'),2400)}
+const today=()=>new Date().toLocaleDateString('en-US',{month:'short',day:'numeric'});
+
+/* ---------- onboarding ---------- */
+function obView(){
+  const o=ob,st=o.step;
+  const reach=Math.round(o.h*1.31),touch=reach+o.v,goal=GOALS[o.g],gap=Math.max(0,goal.t-touch);
+  let h=`<div class="ob"><div class="dots">${[0,1,2,3,4].map(i=>`<i class="${i<=st?'on':''}"></i>`).join('')}</div>`;
+  if(st<2){
+    const q=st?['How high can you jump?','Jump from standing and see how far above your reach you touch. Not sure? 40 cm is about average.',o.v,10,100]:['How tall are you?','We use this to work out your standing reach, so you don’t have to measure it.',o.h,140,220];
+    h+=`${st?'':LOGO}<h1>${st?'':'Welcome to Stride. '}${q[0]}</h1><p class="m">${q[1]}</p>
+    <div class="num"><span id="nv">${q[2]}</span><small>cm</small></div>
+    <input id="rg" type="range" min="${q[3]}" max="${q[4]}" value="${q[2]}" oninput="obSet(this.value)" aria-label="${q[0]}">
+    <div class="pm"><button class="btn g" onclick="obAdj(-1)">−</button><button class="btn g" onclick="obAdj(1)">+</button></div>`;
+  }else if(st===2){
+    h+=`<h1>What’s your goal?</h1><p class="m">Pick one. You can change it later.</p>${GOALS.map((g,i)=>`<button class="opt ${i===o.g?'on':''}" onclick="ob.g=${i};render()"><b>${g.n}</b><span class="m">${g.s}</span></button>`).join('')}`;
+  }else if(st===3){
+    h+=`<h1>How do you train?</h1><p class="m">We’ll pick drills and days that fit you.</p>
+    <div class="pills" style="justify-content:center">${['Home','Gym','Both'].map(x=>`<button class="pill ${o.p===x?'on':''}" onclick="ob.p='${x}';render()">${x}</button>`).join('')}</div>
+    <p class="m">Days per week</p>
+    <div class="pills" style="justify-content:center">${[3,4].map(x=>`<button class="pill ${o.n===x?'on':''}" onclick="ob.n=${x};render()">${x} days</button>`).join('')}</div>`;
+  }else{
+    const lo=Math.ceil(gap/5),hi=Math.ceil(gap/3);
+    h+=`<h1>Your starting point</h1>
+    <div class="sum"><div><span class="m">Standing reach</span><b>${reach} cm</b></div><div><span class="m">Touch now</span><b>${touch} cm</b></div><div><span class="m">Goal touch</span><b style="color:var(--o)">${goal.t} cm</b></div><div><span class="m">To gain</span><b style="color:var(--b)">${gap} cm</b></div></div>
+    <p class="m">${gap>0?`A steady pace is about 3 to 5 cm a month, so expect roughly ${lo} to ${hi} months. The 16-week plan is your first block.`:'You can already reach this height. Go test it on a real rim.'}</p>`;
+  }
+  h+=`<div class="row" style="margin-top:6px">${st?'<button class="btn g" onclick="ob.step--;render()">Back</button>':''}<button class="btn f" onclick="${st===4?'finish()':'ob.step++;render()'}">${st===4?'Start training':'Next'}</button></div></div>`;
+  return h;
+}
+function obSet(v){v=+v;if(ob.step===0)ob.h=v;else ob.v=v;$('nv').textContent=v}
+function obAdj(d){const r=$('rg');r.value=+r.value+d;obSet(r.value)}
+function finish(){
+  const reach=Math.round(ob.h*1.31);
+  S={height:ob.h,reach,startV:ob.v,target:GOALS[ob.g].t,goalName:GOALS[ob.g].n,place:ob.p,days:ob.n,created:Date.now(),logs:[],done:{},sets:[]};
+  sv();tab='goal';render();toast('Plan ready. Let’s go.');
+}
+
+/* ---------- shell ---------- */
+function go(t){tab=t;render();window.scrollTo(0,0)}
+function hdr(){return `<div class="hd">${LOGO.replace('width="56" height="56"','width="40" height="40"').replace('style="margin:0 auto"','')}<div><b>STRIDE</b><span class="m" style="font-size:12px">${S.goalName}: ${S.target} cm touch</span></div><span class="dose" style="margin-left:auto">Streak ${streak()} 🔥</span></div>`}
+function render(){
+  fabSync();
+  if(!S||!S.target){$('nav').classList.add('hide');$('app').innerHTML=obView();return}
+  $('nav').classList.remove('hide');
+  ['goal','plan','drills','logs'].forEach(t=>$('nav-'+t).classList.toggle('on',t===tab));
+  ({goal:rGoal,plan:rPlan,drills:rDrills,logs:rLogs})[tab]();
+}
+const best=()=>Math.max(S.startV,...S.logs.map(l=>l.v));
+
+/* ---------- goal ---------- */
+function rGoal(){
+  const v=best(),need=S.target-S.reach,gap=Math.max(0,+(need-v).toFixed(1));
+  const pct=need<=S.startV?100:Math.min(100,Math.max(0,Math.round((v-S.startV)/(need-S.startV)*100)));
+  const pts=[{d:'Start',v:S.startV},...S.logs].slice(-8),lo=S.startV-6,hi=Math.max(need,v)+4;
+  const bars=pts.map((p,i)=>`<div class="${i===pts.length-1?'l':''}"><span>${p.v}</span><i style="height:${Math.max(12,Math.round((p.v-lo)/(hi-lo)*70))}px"></i><span class="m" style="font-weight:500">${p.d}</span></div>`).join('');
+  $('app').innerHTML=hdr()+`
+  <div class="c" style="text-align:center">
+    <div class="ring"><svg viewBox="0 0 200 200" width="220" height="220"><circle cx="100" cy="100" r="84" fill="none" stroke="#1c1c20" stroke-width="16"/><circle cx="100" cy="100" r="84" fill="none" stroke="#ff5e00" stroke-width="16" stroke-linecap="round" stroke-dasharray="528" stroke-dashoffset="${528-5.28*Math.max(pct,1)}" transform="rotate(-90 100 100)"/></svg>
+    <div class="t"><b>${gap>0?gap:'Done'}</b><span class="m">${gap>0?'cm to go':'Time to dunk'}</span></div></div>
+    <div class="chips"><div><span class="m">Jump</span><b>${v} cm</b></div><div><span class="m">Reach</span><b>${S.reach} cm</b></div><div><span class="m">Need</span><b>${need} cm</b></div></div>
+  </div>
+  <div class="c"><h3 style="font-size:18px">Log a new jump</h3><p class="m" style="margin:2px 0 12px">How high did you jump above your reach?</p>
+    <div class="row"><input id="nj" type="number" inputmode="decimal" step="0.5" placeholder="e.g. ${v+2} cm"><button class="btn" onclick="logJ()">Save</button></div>
+    <div class="bars">${bars}</div></div>${testCard()}${badgeCard()}`;
+}
+function logJ(){
+  const x=parseFloat($('nj').value);
+  if(!(x>=10&&x<=120))return toast('Enter a jump between 10 and 120 cm.');
+  const pb=best();S.logs.push({d:today(),v:x,ts:Date.now()});sv();rGoal();
+  toast(x>pb?`New best: ${x} cm (+${+(x-pb).toFixed(1)})`:'Jump saved. Keep building.');
+}
+
+/* ---------- plan ---------- */
+const DOW=['Mon','Tue','Wed','Thu','Fri','Sat','Sun'],FULL=['Monday','Tuesday','Wednesday','Thursday','Friday','Saturday','Sunday'];
+const DM=()=>S.days===3?{0:0,2:1,4:2}:{0:0,1:1,3:2,4:3};
+const okP=id=>{const c=EX.find(x=>x.id===id).cat;return S.place==='Home'?c!=='Gym':S.place==='Gym'?c!=='Home':true};
+const DAILY=[['Hit your protein target','About 1.6 to 2 g per kg of body weight keeps your muscle.'],['Drink 3 L of water','Hydration helps tendons and recovery.'],['Sleep 7.5 to 8.5 hours','Most of your jump gains are built while you sleep.'],['Knee & ankle check','Sharp pain? Skip the jumps and lift lighter.']];
+let dow=(new Date().getDay()+6)%7,pickKey=null;
+const dk=()=>{const d=new Date();return d.getFullYear()+'-'+(d.getMonth()+1)+'-'+d.getDate()};
+function streak(){let n=0,d=new Date();const f=x=>x.getFullYear()+'-'+(x.getMonth()+1)+'-'+x.getDate(),A=S.act||{};if(!A[f(d)])d.setDate(d.getDate()-1);while(A[f(d)]){n++;d.setDate(d.getDate()-1)}return n}
+function mk(id){const e=EX.find(x=>x.id===id),m=e.sets.match(/(\d+)\s*×\s*(\d+)/),n=m?+m[1]:3,r=m?+m[2]:5;return{id,sets:Array.from({length:n},()=>({w:0,r,d:0}))}}
+function sess(k,pi,di){S.wk=S.wk||{};if(!S.wk[k])S.wk[k]=PH[pi].days[di][1].filter(okP).map(mk);return S.wk[k]}
+function rPlan(){
+  const ph=Math.ceil(week/4),P=PH[ph-1],di=DM()[dow];
+  const wp=Array.from({length:16},(_,i)=>`<button class="pill ${i+1===week?'on':''}" onclick="week=${i+1};rPlan()">Week ${i+1}</button>`).join('');
+  const dp=DOW.map((d,i)=>`<button class="dayb ${i===dow?'on':''}" onclick="dow=${i};rPlan()"><b>${d}</b><span>${DM()[i]!==undefined?P.days[DM()[i]][1].length+' ex':'Rest'}</span></button>`).join('');
+  let body='';
+  if(di===undefined){
+    body=`<div class="c" style="text-align:center"><h3 style="font-size:18px">Rest day</h3><p class="m" style="margin-top:4px">Walk, stretch, eat well. Your tendons adapt while you rest.</p></div>`;
+  }else{
+    const k=`w${week}-d${di+1}`,L=sess(k,ph-1,di),tot=L.reduce((a,x)=>a+x.sets.length,0),dn=L.reduce((a,x)=>a+x.sets.filter(s=>s.d).length,0);
+    body=`<div class="c"><div class="row"><div class="f"><span class="tag">WEEK ${week} · ${DOW[dow].toUpperCase()}</span><h2 style="font-size:20px">${FULL[dow]} session</h2><p class="m" style="font-size:12px">${P.days[di][0]} · ${dn}/${tot} sets done</p></div></div>
+    <div class="row" style="margin-top:12px"><button class="btn g s f" onclick="copyWk('${k}',${di})">Copy last week</button><button class="btn g s f" onclick="clearS('${k}')">Reset</button></div></div>`+
+    L.map((x,ei)=>{const e=EX.find(q=>q.id===x.id);return `<div class="c"><div class="row"><div class="f"><span class="tag">${e.cat.toUpperCase()}</span><h3 style="font-size:17px">${e.name}</h3><p class="m" style="font-size:12px">${e.cue}</p>${hint(e)}${how(e)}</div><button class="btn g s" onclick="rmEx('${k}',${ei})" aria-label="Remove">✕</button></div>
+    <div class="sh"><span>SET</span><span>KG</span><span>REPS</span><span>DONE</span></div>
+    ${x.sets.map((s,si)=>`<div class="sr ${s.d?'ok':''}"><span class="sn">${si+1}</span><input type="number" inputmode="decimal" placeholder="BW" value="${s.w||''}" onchange="upd('${k}',${ei},${si},'w',this.value)" aria-label="Weight"><input type="number" inputmode="numeric" value="${s.r}" onchange="upd('${k}',${ei},${si},'r',this.value)" aria-label="Reps"><button class="ck ${s.d?'on':''}" onclick="chk('${k}',${ei},${si})" aria-label="Done">✓</button></div>`).join('')}
+    <button class="add" onclick="addSet('${k}',${ei})">+ Add set</button></div>`}).join('')+
+    `<button class="big" onclick="openPick('${k}')">+ Add plyo or lower exercise</button>`;
+  }
+  const D=(S.daily||{})[dk()]||{};
+  const daily=`<div class="c"><span class="tag" style="color:var(--o)">DAILY NON-NEGOTIABLES</span><h3 style="font-size:17px;margin-top:2px">Recover like a jumper</h3>
+  ${DAILY.map((d,i)=>`<button class="dl ${D[i]?'on':''}" onclick="dtog(${i})"><i>${D[i]?'✓':''}</i><div><b>${d[0]}</b><span>${d[1]}</span></div></button>`).join('')}
+  <p class="m" style="font-size:13px;margin-top:12px"><b style="color:var(--b)">Coach cue:</b> On jump days, rest 2 to 3 minutes between hard sets and jump at full speed. If you’re tired, stop. Sloppy jumps don’t build height.</p></div>`;
+  $('app').innerHTML=hdr()+`<div class="pills">${wp}</div><div class="days">${dp}</div>${body}${daily}`;
+}
+function hint(e){const l=(S.sets||[]).find(x=>x.name===e.name&&x.w>0);return l?`<p style="font-size:12px;color:var(--b);margin-top:4px">Last: ${l.w} kg × ${l.r}. Try ${l.w+2.5} kg today.</p>`:''}
+const how=e=>`<a href="https://www.youtube.com/results?search_query=${encodeURIComponent(e.name+' proper form')}" target="_blank" rel="noopener" style="font-size:12px;color:var(--b);font-weight:700;display:inline-block;margin-top:4px">How to ▶</a>`;
+function testCard(){const t=Math.max(S.created||0,...S.logs.map(l=>l.ts||0));if(!t)return'';const left=28-Math.floor((Date.now()-t)/864e5);return `<div class="c"><span class="tag">JUMP TEST</span><h3 style="font-size:17px">${left>0?'Next test in '+left+' days':'Time to test your jump'}</h3><p class="m" style="font-size:13px">Test every 4 weeks, warmed up and fresh, then log it above.</p></div>`}
+function badgeCard(){const g=best()-S.startV,n=S.sets.length,st=streak();const B=[['+5 cm',g>=5],['+10 cm',g>=10],['+15 cm',g>=15],['+20 cm',g>=20],['+30 cm',g>=30],['10 sets',n>=10],['100 sets',n>=100],['7-day streak',st>=7]];return `<div class="c"><h3 style="font-size:17px;margin-bottom:10px">Badges</h3><div class="pills" style="flex-wrap:wrap">${B.map(b=>`<span class="pill ${b[1]?'on':''}" style="opacity:${b[1]?1:.45}">${b[1]?'★ ':''}${b[0]}</span>`).join('')}</div></div>`}
+function wkChart(){const W=Array(6).fill(0);S.sets.forEach(x=>{const i=Math.floor((Date.now()-x.id)/6048e5);if(i>=0&&i<6)W[5-i]++});const mx=Math.max(1,...W);return `<div class="c"><h3 style="font-size:17px">Sets per week</h3><div class="bars">${W.map((n,i)=>`<div class="${i===5?'l':''}"><span>${n}</span><i style="height:${Math.max(8,Math.round(n/mx*70))}px"></i><span class="m" style="font-weight:500">${i===5?'Now':'-'+(5-i)+'w'}</span></div>`).join('')}</div></div>`}
+function upd(k,e,s,f,v){S.wk[k][e].sets[s][f]=parseFloat(v)||0;sv()}
+function addSet(k,e){const L=S.wk[k][e].sets,l=L[L.length-1]||{w:0,r:5};L.push({w:l.w,r:l.r,d:0});sv();rPlan()}
+function rmEx(k,e){S.wk[k].splice(e,1);sv();rPlan()}
+function clearS(k){delete S.wk[k];sv();rPlan();toast('Session reset.')}
+function copyWk(k,di){
+  const pk=`w${week-1}-d${di+1}`;
+  if(week<2||!S.wk||!S.wk[pk])return toast('Nothing to copy from last week yet.');
+  S.wk[k]=JSON.parse(JSON.stringify(S.wk[pk])).map(x=>({id:x.id,sets:x.sets.map(s=>({w:s.w,r:s.r,d:0}))}));sv();rPlan();toast('Copied from week '+(week-1)+'.');
+}
+function chk(k,e,si){
+  const x=S.wk[k][e],s=x.sets[si],ex=EX.find(q=>q.id===x.id);
+  if(s.d){s.d=0;S.sets=S.sets.filter(l=>l.id!==s.lid);delete s.lid}
+  else{
+    const pm=Math.max(0,...(S.sets||[]).filter(l=>l.name===ex.name).map(l=>l.w));
+    if(s.w>0&&s.w>pm)toast('New PR on '+ex.name+': '+s.w+' kg');
+    s.d=1;s.lid=Date.now()+Math.floor(Math.random()*1000);
+    S.sets.unshift({id:s.lid,t:new Date().toLocaleString([],{month:'short',day:'numeric',hour:'2-digit',minute:'2-digit'}),name:ex.name,cat:ex.cat,w:s.w,r:s.r});
+    S.act=S.act||{};S.act[dk()]=1;
+    if(navigator.vibrate)navigator.vibrate(30);
+    startRest(150);
+  }
+  sv();rPlan();
+}
+function dtog(i){S.daily=S.daily||{};const d=S.daily[dk()]=S.daily[dk()]||{};d[i]=d[i]?0:1;sv();rPlan()}
+function openPick(k){
+  pickKey=k;
+  $('pl').innerHTML=EX.map(e=>`<button class="dl" onclick="pickEx('${e.id}')"><div><b>${e.name}</b><span>${e.cat} · ${e.sets}</span></div></button>`).join('');
+  $('pick').classList.add('show');
+}
+function pickEx(id){S.wk[pickKey].push(mk(id));sv();$('pick').classList.remove('show');rPlan();toast('Exercise added.')}
+
+/* ---------- AI coach ---------- */
+let AI=null,aiH=[];
+function fabSync(){$('fab').classList.toggle('hide',!(AI&&S&&S.target))}
+AI=true;
+function addB(m,c,t){const d=document.createElement('div');d.className='bub '+c;d.textContent=t;m.appendChild(d);m.scrollTop=m.scrollHeight;return d}
+function openAI(){$('ai').classList.add('show');const m=$('aim');if(!m.children.length)addB(m,'a','Hi! Ask me about your plan, jump form, soreness, or how to add height faster.');$('aic').innerHTML=QQ.map((q,i)=>`<button class="pill" onclick="qa(${i})">${q[0]}</button>`).join('')}
+function closeAI(){$('ai').classList.remove('show')}
+const QQ=[['I’m tired today','I’m tired today. Should I lighten or skip my session, and how?'],['Sore knees','My knees feel sore. What should I do and when should I see a doctor?'],['How long to my goal?','Based on my profile, how long will it realistically take me to reach my goal?'],['What to eat','What should I eat and how much protein do I need to jump higher?'],['Fix my form','Give me the 3 most important cues to fix my jump form.'],['Rest day plan','What should I do on a rest day to recover and keep improving?']];
+function qa(i){if($('aib').disabled)return;$('aiq').value=QQ[i][1];askAI()}
+function ctx(){return `You are Stride Coach, a friendly, practical vertical-jump and dunk coach inside a training app. Reply in the same language the user writes in. Keep answers short (under 150 words), concrete and encouraging. You are not a doctor: for sharp or lasting pain, injuries or medical questions, tell them to see a professional. Never push heavy jumping when someone is hurt or very tired.\nUser profile: height ${S.height} cm, standing reach ${S.reach} cm, best jump ${best()} cm, goal ${S.goalName} (${S.target} cm touch, needs a ${S.target-S.reach} cm jump), trains at ${S.place||'Both'}, ${S.days||4} days a week, now in plan week ${week}, ${S.sets.length} sets logged.`}
+async function askAI(){
+  const q=$('aiq').value.trim();if(!q||!AI)return;
+  $('aiq').value='';aiH.push({role:'user',content:q});
+  const m=$('aim');addB(m,'u',q);const b=addB(m,'a','…');$('aib').disabled=true;
+  const msgs=aiH.slice(-7).map(x=>({role:x.role,content:x.content}));
+  try{
+    const res=await fetch('/api/coach',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({profile:{height:S.height,reach:S.reach,best:best(),target:S.target,place:S.place||'Both',days:S.days||4,week,sets:S.sets.length},messages:msgs})});
+    if(res.status===429)throw{code:'rate_limited'};
+    if(!res.ok)throw{};
+    const t=(await res.json()).text||'Sorry, I have no answer for that.';
+    b.textContent=t;aiH.push({role:'assistant',content:t});
+  }catch(e){
+    aiH.pop();
+    b.textContent=e&&e.code==='not_granted'?'The coach needs your permission to answer.':e&&e.code==='rate_limited'?'Too many questions. Try again in a minute.':'Couldn’t reach the coach. Try again.';
+  }
+  $('aib').disabled=false;m.scrollTop=m.scrollHeight;
+}
+
+/* ---------- drills ---------- */
+function rDrills(){
+  const cats=['All','Plyo','Gym','Home','Tendon/Core'];
+  $('app').innerHTML=hdr()+`<div class="c"><h2 style="font-size:20px">Drills</h2><p class="m" style="margin-bottom:12px">Tap a drill to log a set.</p>
+  <input id="q" type="search" placeholder="Search drills" oninput="fillD()" style="margin-bottom:10px">
+  <div class="pills" style="margin:0">${cats.map(c=>`<button class="pill ${c===cat?'on':''}" onclick="cat='${c}';rDrills()">${c==='Tendon/Core'?'Tendon':c}</button>`).join('')}</div></div><div id="dl"></div>`;
+  fillD();
+}
+function fillD(){
+  const q=($('q').value||'').toLowerCase().trim();
+  const L=EX.filter(e=>(cat==='All'||e.cat===cat)&&(!q||(e.name+e.cue).toLowerCase().includes(q)));
+  $('dl').innerHTML=L.length?L.map(e=>`<div class="c" style="padding:16px"><div class="row"><div class="f"><span class="tag">${e.cat.toUpperCase()}</span><h3 style="font-size:16px">${e.name}</h3><p class="m" style="font-size:13px;margin-top:2px">${e.cue}</p>${how(e)}</div><div style="text-align:right"><div class="dose" style="background:var(--s2);margin-bottom:8px">${e.sets}</div><button class="btn s" onclick="openM('${e.id}')">Log set</button></div></div></div>`).join(''):'<div class="c m" style="text-align:center">No drills match your search.</div>';
+}
+
+/* ---------- logging modal + rest ---------- */
+function openM(id){
+  cur=EX.find(e=>e.id===id);
+  $('mc').textContent=cur.cat.toUpperCase();$('mn').textContent=cur.name;$('mq').textContent='Target '+cur.sets+'. '+cur.cue;
+  $('lw').value=cur.cat==='Gym'?60:0;
+  $('modal').classList.add('show');
+}
+function closeM(){$('modal').classList.remove('show');cur=null}
+function logSet(r){
+  if(!cur)return;
+  S.sets.unshift({id:Date.now(),t:new Date().toLocaleString([],{month:'short',day:'numeric',hour:'2-digit',minute:'2-digit'}),name:cur.name,cat:cur.cat,w:parseFloat($('lw').value)||0,r:parseInt($('lr').value,10)||1});
+  sv();closeM();toast('Set logged.');
+  if(tab==='logs')rLogs();
+  if(r)startRest(150);
+}
+function startRest(s){
+  stopRest();rest=s;$('rest').classList.add('show');$('rt').textContent=fmt(rest);
+  rt=setInterval(()=>{rest--;$('rt').textContent=fmt(Math.max(rest,0));if(rest<=0){stopRest();if(navigator.vibrate)navigator.vibrate([200,100,300]);beep();toast('Rest over. Next set.')}},1000);
+}
+function stopRest(){clearInterval(rt);rt=null;$('rest').classList.remove('show')}
+const fmt=s=>String(Math.floor(s/60)).padStart(2,'0')+':'+String(s%60).padStart(2,'0');
+function beep(){try{const a=new (window.AudioContext||window.webkitAudioContext)(),o=a.createOscillator(),g=a.createGain();o.frequency.value=880;g.gain.value=.2;o.connect(g);g.connect(a.destination);o.start();o.stop(a.currentTime+.35)}catch(e){}}
+
+/* ---------- logs & backup ---------- */
+function rLogs(){
+  const feed=S.sets.length?S.sets.slice(0,40).map(s=>`<div class="fe"><div><b style="font-size:14px">${s.name}</b><div class="m" style="font-size:12px">${s.w>0?s.w+' kg × ':''}${s.r} reps · ${s.t}</div></div><button class="btn g s" onclick="delSet(${s.id})" aria-label="Delete">✕</button></div>`).join(''):'<p class="m" style="text-align:center;padding:12px">No sets yet. Tap a drill in the plan or drill list to log one.</p>';
+  $('app').innerHTML=hdr()+wkChart()+`
+  <div class="c"><h2 style="font-size:20px">Backup</h2><p class="m" style="margin-bottom:12px">Everything is saved in this browser. Export a copy to keep it safe.</p>
+  <div class="row"><button class="btn f" onclick="exp()">Export JSON</button><label class="btn g f" style="text-align:center;cursor:pointer">Import<input type="file" accept=".json" class="hide" onchange="imp(event)"></label></div>
+  <button class="btn g" id="rs" style="width:100%;margin-top:10px" onclick="reset()">Start over</button></div>
+  <div class="c"><div class="row"><h3 class="f" style="font-size:17px">Set log</h3><span class="m">${S.sets.length} sets</span></div>${feed}</div>`;
+}
+function delSet(id){S.sets=S.sets.filter(s=>s.id!==id);sv();rLogs()}
+function exp(){
+  const b=new Blob([JSON.stringify(S,null,2)],{type:'application/json'}),u=URL.createObjectURL(b),a=document.createElement('a');
+  a.href=u;a.download='stride-backup-'+new Date().toISOString().slice(0,10)+'.json';document.body.appendChild(a);a.click();a.remove();URL.revokeObjectURL(u);toast('Backup downloaded.');
+}
+function imp(e){
+  const f=e.target.files[0];if(!f)return;const r=new FileReader();
+  r.onload=x=>{try{const d=JSON.parse(x.target.result);if(!d.target||!Array.isArray(d.logs))throw 0;S=Object.assign({done:{},sets:[]},d);sv();toast('Backup restored.');render()}catch(_){toast('That isn’t a Stride backup file.')}};
+  r.readAsText(f);e.target.value='';
+}
+function reset(){
+  const b=$('rs');
+  if(!arm){arm=true;b.textContent='Tap again to erase everything';setTimeout(()=>{arm=false;if($('rs'))$('rs').textContent='Start over'},3500)}
+  else{arm=false;S=null;try{localStorage.removeItem(KEY)}catch(e){}ob={step:0,h:178,v:40,g:2,p:'Both',n:4};render()}
+}
+render();
+</script>
+</body>
+</html>
