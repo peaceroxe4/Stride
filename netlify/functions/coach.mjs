@@ -3,6 +3,8 @@
 const n = (v, max = 400) => (Number.isFinite(+v) ? Math.min(Math.max(+v, 0), max) : 0);
 
 export default async (req) => {
+  // GET is a health check: the coach button only shows when an API key is configured.
+  if (req.method === 'GET') return new Response(null, { status: process.env.ANTHROPIC_API_KEY ? 204 : 404 });
   if (req.method !== 'POST') return new Response('Method not allowed', { status: 405 });
   let body;
   try { body = await req.json(); } catch { return new Response('Bad request', { status: 400 }); }

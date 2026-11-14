@@ -304,7 +304,7 @@ function pickEx(id){S.wk[pickKey].push(mk(id));sv();$('pick').classList.remove('
 /* ---------- AI coach ---------- */
 let AI=null,aiH=[];
 function fabSync(){$('fab').classList.toggle('hide',!(AI&&S&&S.target))}
-AI=true;
+try{fetch('/api/coach').then(r=>{if(r.ok){AI=true;fabSync()}}).catch(()=>{})}catch(e){}
 function addB(m,c,t){const d=document.createElement('div');d.className='bub '+c;d.textContent=t;m.appendChild(d);m.scrollTop=m.scrollHeight;return d}
 function openAI(){$('ai').classList.add('show');const m=$('aim');if(!m.children.length)addB(m,'a','Hi! Ask me about your plan, jump form, soreness, or how to add height faster.');$('aic').innerHTML=QQ.map((q,i)=>`<button class="pill" onclick="qa(${i})">${q[0]}</button>`).join('')}
 function closeAI(){$('ai').classList.remove('show')}

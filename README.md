@@ -9,3 +9,5 @@ Files: `index.html` (the app), `netlify/functions/coach.mjs` (AI coach backend),
 5. In Domain management, add your own domain and follow the DNS steps.
 
 Test: open the site, finish setup, tap "Ask coach". If it says it couldn't reach the coach, check the key and the function logs in Netlify.
+
+Free mode: skip steps 1 and 4. Without ANTHROPIC_API_KEY the site works fully and the "Ask coach" button stays hidden. Add the key later to turn it on.
